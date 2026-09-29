@@ -1,134 +1,26 @@
-[![Download](https://api.bintray.com/packages/twsxtd/maven/epic/images/download.svg) ](https://bintray.com/twsxtd/maven/epic/_latestVersion)
-[![Join the chat at https://gitter.im/android-hacker/epic](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/android-hacker/epic?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)   
+# epic
 
-[中文文档入口](README_cn.md "中文")
+本仓库是「epic」的安卓版本获取入口，附使用资料索引。
 
-What is it?
------------
+## 安装文件资源（夸克网盘）
 
-Epic is the continuation of [Dexposed](https://github.com/alibaba/dexposed) on ART (Supports 5.0 ~ 11).
+> **epic 安装文件资源（夸克网盘）**：[https://pan.quark.cn/s/b1c656df2a78](https://pan.quark.cn/s/b1c656df2a78)
 
-> Dexposed is a powerful yet non-invasive runtime [AOP (Aspect-oriented Programming)](http://en.wikipedia.org/wiki/Aspect-oriented_programming) framework
-for Android app development, based on the work of open-source [Xposed](https://github.com/rovo89/Xposed) [framework](https://github.com/rovo89/XposedBridge) project.
->
-> The AOP of Dexposed is implemented purely non-invasive, without any annotation processor,
-weaver or bytecode rewriter. The integration is as simple as loading a small JNI library
-in just one line of code at the initialization phase of your app.
->
-> Not only the code of your app, but also the code of Android framework that running in your
-app process can be hooked.
+## 官方项目
 
-Epic keeps the same API and all capability of Dexposed, you can do anything which is supported by Dexposed.
+- 上游项目：[tiann/epic](https://github.com/tiann/epic)
 
-Typical use-cases
------------------
+## 更多资料
 
-* Classic AOP programming
-* Instrumentation (for testing, performance monitoring and etc.)
-* Security audit (sensitive api check,Smash shell)
-* Just for fun :)
+- [下载与安装教程](https://github.com/alipymanbu/Android/blob/master/%E5%AE%98%E7%BD%91%E7%89%88APP%E4%B8%8B%E8%BD%BD/epic/%E4%B8%8B%E8%BD%BD%E4%B8%8E%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B.md)
+- [内购支付与奖励返利](https://github.com/alipymanbu/Android/blob/master/%E5%AE%98%E7%BD%91%E7%89%88APP%E4%B8%8B%E8%BD%BD/epic/%E5%86%85%E8%B4%AD%E6%94%AF%E4%BB%98%E4%B8%8E%E5%A5%96%E5%8A%B1%E8%BF%94%E5%88%A9.md)
+- [堡垒之夜手机版怎么下载](https://github.com/alipymanbu/Android/blob/master/%E5%AE%98%E7%BD%91%E7%89%88APP%E4%B8%8B%E8%BD%BD/epic/%E5%A0%A1%E5%9E%92%E4%B9%8B%E5%A4%9C%E6%89%8B%E6%9C%BA%E7%89%88%E6%80%8E%E4%B9%88%E4%B8%8B%E8%BD%BD.md)
+- [常见问题与解决方法](https://github.com/alipymanbu/Android/blob/master/%E5%AE%98%E7%BD%91%E7%89%88APP%E4%B8%8B%E8%BD%BD/epic/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E4%B8%8E%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95.md)
+- [每周免费游戏领取方法](https://github.com/alipymanbu/Android/blob/master/%E5%AE%98%E7%BD%91%E7%89%88APP%E4%B8%8B%E8%BD%BD/epic/%E6%AF%8F%E5%91%A8%E5%85%8D%E8%B4%B9%E6%B8%B8%E6%88%8F%E9%A2%86%E5%8F%96%E6%96%B9%E6%B3%95.md)
+- [游戏库与重新安装](https://github.com/alipymanbu/Android/blob/master/%E5%AE%98%E7%BD%91%E7%89%88APP%E4%B8%8B%E8%BD%BD/epic/%E6%B8%B8%E6%88%8F%E5%BA%93%E4%B8%8E%E9%87%8D%E6%96%B0%E5%AE%89%E8%A3%85.md)
+- [账号登录与跨平台同步](https://github.com/alipymanbu/Android/blob/master/%E5%AE%98%E7%BD%91%E7%89%88APP%E4%B8%8B%E8%BD%BD/epic/%E8%B4%A6%E5%8F%B7%E7%99%BB%E5%BD%95%E4%B8%8E%E8%B7%A8%E5%B9%B3%E5%8F%B0%E5%90%8C%E6%AD%A5.md)
+- [全部软件目录](https://github.com/alipymanbu/Android/blob/master/%E5%85%A8%E9%83%A8%E8%BD%AF%E4%BB%B6%E7%9B%AE%E5%BD%95.md)
 
+---
 
-Integration
------------
-
-Directly add epic aar to your project as compile libraries, Gradle dependency like following(jitpack):
-
-```groovy
-dependencies {
-    compile 'com.github.tiann:epic:0.11.2'
-}
-```
-
-Everything is ready.
-
-Basic usage
------------
-
-There are three injection points for a given method: *before*, *after*, *origin*.
-
-Example 1: monitor the creation and destroy of java thread
-
-```java
-class ThreadMethodHook extends XC_MethodHook{
-    @Override
-    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-        super.beforeHookedMethod(param);
-        Thread t = (Thread) param.thisObject;
-        Log.i(TAG, "thread:" + t + ", started..");
-    }
-
-    @Override
-    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-        super.afterHookedMethod(param);
-        Thread t = (Thread) param.thisObject;
-        Log.i(TAG, "thread:" + t + ", exit..");
-    }
-}
-
-DexposedBridge.hookAllConstructors(Thread.class, new XC_MethodHook() {
-    @Override
-    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-        super.afterHookedMethod(param);
-        Thread thread = (Thread) param.thisObject;
-        Class<?> clazz = thread.getClass();
-        if (clazz != Thread.class) {
-            Log.d(TAG, "found class extend Thread:" + clazz);
-            DexposedBridge.findAndHookMethod(clazz, "run", new ThreadMethodHook());
-        }
-        Log.d(TAG, "Thread: " + thread.getName() + " class:" + thread.getClass() +  " is created.");
-    }
-});
-DexposedBridge.findAndHookMethod(Thread.class, "run", new ThreadMethodHook());
-```
-
-Example 2: Intercept the dex loading behavior
-
-```java
-DexposedBridge.findAndHookMethod(DexFile.class, "loadDex", String.class, String.class, int.class, new XC_MethodHook() {
-    @Override
-    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-        super.beforeHookedMethod(param);
-        String dex = (String) param.args[0];
-        String odex = (String) param.args[1];
-        Log.i(TAG, "load dex, input:" + dex + ", output:" + odex);
-    }
-});
-```
-
-Checkout the `sample` project to find out more.
-
-Support
-----------
-
-Epic supports ART thumb2 and arm64 architecture from Android 5.0 ~ 11. arm32, x86, x86_64 and mips are not supported now (Thus it cannot work on android emulator).
-
-
-Known Issues
--------------
-
-1. Short method (instruction less 8 bytes on thumb2 or less 16bytes in ARM64) are not supported.
-2. Fully inline methods are not supported.
-
-Contribute
-----------
-
-We are open to constructive contributions from the community, especially pull request
-and quality bug report. **Currently, the implementation for ART is not proved in large scale, we value your help to test or improve the implementation.**
-
-You can clone this project, build and install the sample app, just make some click  in your device, if some bugs/crash occurs, please file an issue or a pull request, I would appreciate it :)
-
-Thanks
--------
-
-1. [Dexposed](https://github.com/alibaba/dexposed)
-2. [Xposed](http://repo.xposed.info/module/de.robv.android.xposed.installer)
-3. [mar-v-in/ArtHook](https://github.com/mar-v-in/ArtHook)
-4. [Nougat_dlfunctions](https://github.com/avs333/Nougat_dlfunctions.git)
-
-Contact me
-----------
-
-twsxtd@gmail.com
-
-[Join discussion](https://gitter.im/android-hacker/epic?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) 
+> 本仓库由上游项目 fork 而来，原始说明见[上游仓库](https://github.com/tiann/epic)。
